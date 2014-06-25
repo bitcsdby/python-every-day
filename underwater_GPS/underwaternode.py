@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bitcsdby'
+"""
+本文实现了 underwater gps 算法的节点类基本理论
+水下节点的主要成员变量
+self.coor 本地坐标估值
+self.now  本地当前时间
+self.ctlist 本地收到GPS数据对的列表（coor，recetime）
+self.tu  本地时间误差初值
+
+每次收到一个GPS数据的时候，加入到self.ctlist中
+self.ctlist的长度为3以上后
+
+调用self.localization()函数进行位置矫正和时间同步
+其中，self.coor的估值为三个卫星坐标的均值，（z除外，z是确定值，可通过传感器得到）
+进行多次迭代后，可得到收敛后的x，y，z和t
+"""
 
 from common import Coordinate
 from common import CoorTimePair
@@ -70,14 +85,12 @@ class Underwaternode:
         H = [a1, a2, a3]
 
 #        print 'H matrix'
-
 #        for x in H:
 #            print x
 
         rou1 = self.getdeltarou(self.ctlist[0])
         rou2 = self.getdeltarou(self.ctlist[1])
         rou3 = self.getdeltarou(self.ctlist[2])
-
 
         deltarou = [rou1, rou2, rou3]
 
@@ -91,12 +104,15 @@ class Underwaternode:
         self.coor.y += rlt[1]
         self.tu += rlt[2]
 
-        node1.ctlist[0].localreceivetime_to_ += rlt[2]
-        node1.ctlist[1].localreceivetime_to_ += rlt[2]
-        node1.ctlist[2].localreceivetime_to_ += rlt[2]
+        #node1.now = rlt[2]
+        #node1.ctlist[0].localreceivetime_to_ = rlt[2]
+        #node1.ctlist[1].localreceivetime_to_ = rlt[2]
+        #node1.ctlist[2].localreceivetime_to_ = rlt[2]
+
 
         #print 'x y z'
         print self.coor.x, self.coor.y, self.coor.z
+        print 'tu',self.tu
         #print 't'
         #print self.now + self.tu
 
@@ -116,16 +132,17 @@ if __name__ == '__main__':
         S2 = Satellite(250., 150., 0., 1.23547)
         S3 = Satellite(100., 200., 0., 1.23547)
 
-        node1 = Underwaternode((500+250+100)/3, (400+150+200)/3, 100, timenow = 0, a = 1.012)
+        node1 = Underwaternode((500+250+100) / 3, (400+150+200) / 3, 100, timenow = 0, a = 1.012)
 
         targetcoor = Coordinate(250, 200, 100, 1.23547)
 
 #caculate original value of tu
-        tu = ((node1.now + propagationtime(S1.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
-              (node1.now + propagationtime(S2.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
-              (node1.now + propagationtime(S3.coor, targetcoor) - node1.coor.z / acoustic_velocity) )/3
+#        tu = ((node1.now + propagationtime(S1.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
+#              (node1.now + propagationtime(S2.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
+#              (node1.now + propagationtime(S3.coor, targetcoor) - node1.coor.z / acoustic_velocity)) / 3
+        tu = (S1.coor.ts - node1.now + S2.coor.ts - node1.now + S3.coor.ts - node1.now) / 3
 
-        node1.tu = tu
+        node1.tu = 0
 
         node1.ctlist.append(CoorTimePair(S1, node1.now + propagationtime(S1.coor, targetcoor)))
         node1.ctlist.append(CoorTimePair(S2, node1.now + propagationtime(S2.coor, targetcoor)))
