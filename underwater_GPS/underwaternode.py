@@ -16,9 +16,10 @@ class Underwaternode:
         self.ctlist = []
         self.ca = a
 
-    def __init__(self, x, y, z, time, a = 1):
-        self.coor = Coordinate(x,y,z,time)
-        self.now = time
+    def __init__(self, x, y, z, timenow, a = 1):
+        self.coor = Coordinate(x,y,z,timenow)
+        self.now = timenow
+        self.tu = 0
         self.ctlist = []
         self.ca = a
 
@@ -29,20 +30,27 @@ class Underwaternode:
 
         ri = self.getri(coor)
 
-        print 'coor', coor.x,coor.y
-        print 'self.coor', self.coor.x,self.coor.y
+ #       print 'coor', coor.x, coor.y
+ #       print 'self.coor', self.coor.x,self.coor.y
         ax = (coor.x - self.coor.x) / ri
         ay = (coor.y - self.coor.y) / ri
 
-        print ax, ay, ri
+ #       print ax, ay, ri
 
         return [ax, ay, -acoustic_velocity]
 
     #get ^rou - rou ,in which ^rou is sqrt()+c*self.now - c(to_ - ts)
     def getdeltarou(self, ctpair):
-        _rou = self.getri(ctpair.S.coor) + acoustic_velocity * self.now
-        rou = acoustic_velocity * (ctpair.receivetime - ctpair.S.coor.ts)
+#Ri + C ^tu - c(to' - ts)
+#^tu = receivetime - (ts + E / acoustic_velocity)
+        _rou = self.getri(ctpair.S.coor) + \
+               acoustic_velocity * self.tu
+        rou = acoustic_velocity * (ctpair.localreceivetime_to_ - ctpair.S.coor.ts)
 
+   #     print ' '
+   #     print '_rou',_rou
+   #     print 'rou',rou
+   #     print ' '
         return _rou - rou
 
 #get sqrt(xi-xu)^2 ...
@@ -61,9 +69,15 @@ class Underwaternode:
 
         H = [a1, a2, a3]
 
+#        print 'H matrix'
+
+#        for x in H:
+#            print x
+
         rou1 = self.getdeltarou(self.ctlist[0])
         rou2 = self.getdeltarou(self.ctlist[1])
         rou3 = self.getdeltarou(self.ctlist[2])
+
 
         deltarou = [rou1, rou2, rou3]
 
@@ -71,7 +85,20 @@ class Underwaternode:
 
         rlt = np.dot(invH, deltarou)
 
-        print 'rlt', rlt
+        #print 'rlt', rlt
+
+        self.coor.x += rlt[0]
+        self.coor.y += rlt[1]
+        self.tu += rlt[2]
+
+        node1.ctlist[0].localreceivetime_to_ += rlt[2]
+        node1.ctlist[1].localreceivetime_to_ += rlt[2]
+        node1.ctlist[2].localreceivetime_to_ += rlt[2]
+
+        #print 'x y z'
+        print self.coor.x, self.coor.y, self.coor.z
+        #print 't'
+        #print self.now + self.tu
 
 
 def edistance(coor1, coor2):
@@ -89,14 +116,31 @@ if __name__ == '__main__':
         S2 = Satellite(250., 150., 0., 1.23547)
         S3 = Satellite(100., 200., 0., 1.23547)
 
-        node1 = Underwaternode(0, 0, 0, 0, a = 1.012)
+        node1 = Underwaternode((500+250+100)/3, (400+150+200)/3, 100, timenow = 0, a = 1.012)
 
         targetcoor = Coordinate(250, 200, 100, 1.23547)
+
+#caculate original value of tu
+        tu = ((node1.now + propagationtime(S1.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
+              (node1.now + propagationtime(S2.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
+              (node1.now + propagationtime(S3.coor, targetcoor) - node1.coor.z / acoustic_velocity) )/3
+
+        node1.tu = tu
 
         node1.ctlist.append(CoorTimePair(S1, node1.now + propagationtime(S1.coor, targetcoor)))
         node1.ctlist.append(CoorTimePair(S2, node1.now + propagationtime(S2.coor, targetcoor)))
         node1.ctlist.append(CoorTimePair(S3, node1.now + propagationtime(S3.coor, targetcoor)))
 
-        print 'node1.ctlist', node1.ctlist
+        #print 'node1.ctlist', node1.ctlist
 
-        print node1.localization()
+        for i in range(3):
+            node1.localization()
+
+"""
+        node1.ctlist.append(CoorTimePair(S1, node1.now + propagationtime(S1.coor, targetcoor), \
+                                         node1.now + propagationtime(S1.coor, targetcoor) - node1.coor.z / acoustic_velocity))
+        node1.ctlist.append(CoorTimePair(S2, node1.now + propagationtime(S2.coor, targetcoor), \
+                                         node1.now + propagationtime(S2.coor, targetcoor) - node1.coor.z / acoustic_velocity))
+        node1.ctlist.append(CoorTimePair(S3, node1.now + propagationtime(S3.coor, targetcoor), \
+                                         node1.now + propagationtime(S3.coor, targetcoor) - node1.coor.z / acoustic_velocity))
+"""

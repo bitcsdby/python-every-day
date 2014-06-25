@@ -12,7 +12,7 @@ class Coordinate:
 
 
 class CoorTimePair:
-    def __init__(self, S, time):
+    def __init__(self, S, to_):
         """coor and receive time in pair"""
-        self.receivetime = float(time)
+        self.localreceivetime_to_ = float(to_)
         self.S = S
