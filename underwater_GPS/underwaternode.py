@@ -140,7 +140,7 @@ if __name__ == '__main__':
 #        tu = ((node1.now + propagationtime(S1.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
 #              (node1.now + propagationtime(S2.coor, targetcoor) - node1.coor.z / acoustic_velocity) +\
 #              (node1.now + propagationtime(S3.coor, targetcoor) - node1.coor.z / acoustic_velocity)) / 3
-        tu = (S1.coor.ts - node1.now + S2.coor.ts - node1.now + S3.coor.ts - node1.now) / 3
+#        tu = (S1.coor.ts - node1.now + S2.coor.ts - node1.now + S3.coor.ts - node1.now) / 3
 
         node1.tu = 0
 
