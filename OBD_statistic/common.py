@@ -48,7 +48,7 @@ class Rawdatastructure:
 
         # LOAD_PCT  100 / 255 %
         if dataitem['LOAD_PCT'].isdigit():
-            self.load_pct = '%2.5f' % (float(dataitem['LOAD_PCT']) / 255.0 * 100)
+            self.load_pct = '%.5f' % (float(dataitem['LOAD_PCT']) / 255.0 * 100)
         else:
             print 'invalid LOAD_PCT value', dataitem['LOAD_PCT']
 
@@ -60,7 +60,7 @@ class Rawdatastructure:
 
         # APP_R 100 / 255%
         if dataitem['APP_R'].isdigit():
-            self.app_r = '%2.5f' % (float(dataitem['APP_R']) / 255.0 * 100)
+            self.app_r = '%.5f' % (float(dataitem['APP_R']) / 255.0 * 100)
         else:
             print 'invalid APP_R value', dataitem['APP_R']
 
