@@ -70,6 +70,7 @@ class Statistic:
         l = len(self.dsitems)
         maxspeed = 0.0      ## for maxspeed
         speedsum = 0.0      ## for average speed
+        consumptionsum = 0.0        ## for averge oil consumption
 
         for i in range(l-1):
             #self.dsitems[i].printvalues()
@@ -98,13 +99,15 @@ class Statistic:
                 print 'vss', self.dsitems[i].vss
 
             ##idling
-            print 'rmp app_r', self.dsitems[i].rpm, self.dsitems[i].vss
+            #print 'rmp app_r', self.dsitems[i].rpm, self.dsitems[i].vss
             if self.dsitems[i].rpm != 0 and self.dsitems[i].vss == 0:
                 print self.dsitems[i].rpm, self.dsitems[i].app_r
                 self.toidling += 1
 
             ##energy consumption
             #print 'MAF', self.dsitems[i].maf
+            if self.dsitems[i].vss != 0:
+                consumptionsum += self.dsitems[i].maf / self.dsitems[i].vss * 0.339
 
             # DIST
             if self.dsitems[i].mil_dist > self.mildistance:
@@ -116,13 +119,15 @@ class Statistic:
         print 'speedsum', speedsum
 
         self.averagespeed = speedsum / l ;
+        self.oilconsumption = consumptionsum / l ;
         print '急刹车次数', self.tobrakes
         print '急踩油门次数', self.tostepongas
-        print '高速巡航时间', self.tohighspeed * 7
+        print '高速巡航时间', self.tohighspeed / l, '%'
         print '怠速时间', self.toidling / l * 100, '%'
-        print '行驶里程', '总里程', self.mildistance + self.clrdistance, \
-                          '故障', self.mildistance, '正常', self.clrdistance
-        print '平均速度', self.averagespeed
+        print '行驶里程', '总里程', self.mildistance + self.clrdistance, 'Km'\
+                          '故障', self.mildistance, '  ','正常', self.clrdistance
+        print '平均速度', self.averagespeed, 'Km/h'
+        print '平均油耗', self.oilconsumption, 'L/ 100km'
         print ''
         #print '行驶里程', self
         ## statistic with dsitems
