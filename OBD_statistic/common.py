@@ -10,6 +10,7 @@ class Rawdatastructure:
         self.initial_mil = 0.00  # total mil = initial_mil + mildist + clrdist
         self.vss = 0.00  # vehicle speed sensor
         self.load_pct = 0.00  # % load value of the engine
+        self.maf = 0.00  # g/s energy cnosumption
         self.rpm = 0  # round per minute of engine
         self.app_r = 0.00  # % relative accelerator pedal position
         self.dataclean(dataitem)
@@ -18,6 +19,7 @@ class Rawdatastructure:
         print 'MIL_DIST', self.mil_dist
         print 'CLR_DIST', self.clr_dist
         print 'VSS', self.vss
+        print 'MAF', self.maf
         print 'LOAD_PCT', self.load_pct
         print 'RPM', self.rpm
         print 'APP_R', self.app_r
@@ -48,7 +50,7 @@ class Rawdatastructure:
 
         # LOAD_PCT  100 / 255 %
         if dataitem['LOAD_PCT'].isdigit():
-            self.load_pct = '%.5f' % (float(dataitem['LOAD_PCT']) / 255.0 * 100)
+            self.load_pct = float('%.5f' % (float(dataitem['LOAD_PCT']) / 255.0 * 100))
         else:
             print 'invalid LOAD_PCT value', dataitem['LOAD_PCT']
 
@@ -60,7 +62,12 @@ class Rawdatastructure:
 
         # APP_R 100 / 255%
         if dataitem['APP_R'].isdigit():
-            self.app_r = '%.5f' % (float(dataitem['APP_R']) / 255.0 * 100)
+            self.app_r = float('%.5f' % (float(dataitem['APP_R']) / 255.0 * 100))
         else:
             print 'invalid APP_R value', dataitem['APP_R']
 
+        #MAF g/s
+        if dataitem['MAF'].isdigit():
+            self.maf = float('%.5f' % (float(dataitem['MAF']) / 100))
+        else:
+            print 'invalid MAF value', dataitem['MAF']
