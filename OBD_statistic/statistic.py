@@ -66,6 +66,22 @@ class Statistic:
 
         print len(self.dsitems), len(self.dbitems)
 
+    def setscore(self):
+        A = 100 - self.tostepongas * 7.5
+        A = 60 if A < 60 else A
+
+        B = 100 - self.tobrakes * 7.5
+        B = 60 if B < 60 else B
+
+        C = 100 - self.toidling
+        C = 60 if C < 60 else C
+
+        D = 100 - self.tohighspeed
+        D = 60 if D < 60 else D
+        #print A,B,C,D
+        self.drivingscore = (A + B + C + D ) / 4
+
+
     def runstatistic(self):
         l = len(self.dsitems)
         maxspeed = 0.0      ## for maxspeed
@@ -73,35 +89,36 @@ class Statistic:
         consumptionsum = 0.0        ## for averge oil consumption
 
         for i in range(l-1):
-            #self.dsitems[i].printvalues()
+            self.dsitems[i].printvalues()
             # print self.dsitems[i].vss
             #print type(self.dsitems[i].load_pct)
             #print 'MAF', self.dsitems[i].maf
 
             ## load_pct
-            if self.dsitems[i].load_pct > 40 and self.dsitems[i].vss > self.dsitems[i+1].vss:
-                #print 'load_pct', self.dsitems[i].load_pct
-                #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
-                #print ''
-                self.tobrakes += 1
-
-            if self.dsitems[i].load_pct < 14 and self.dsitems[i].vss <= self.dsitems[i+1].vss:
+            if self.dsitems[i].load_pct > 50 and self.dsitems[i].vss < self.dsitems[i+1].vss:
                 #print 'load_pct', self.dsitems[i].load_pct
                 #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
                 #print ''
                 self.tostepongas += 1
 
+            if self.dsitems[i].load_pct < 10 and self.dsitems[i].vss > self.dsitems[i+1].vss + 15:  ## 15 is a threshold
+                #print 'load_pct', self.dsitems[i].load_pct , self.dsitems[i].vss, self.dsitems[i+1].vss
+                #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
+                #print ''
+                self.tobrakes += 1
+
             ## speed
             speedsum += self.dsitems[i].vss
             if self.dsitems[i].vss > maxspeed:
                 maxspeed = self.dsitems[i].vss
-            if self.dsitems[i].vss > 70:
-                print 'vss', self.dsitems[i].vss
+            if self.dsitems[i].vss > 50:
+                #print 'vss', self.dsitems[i].vss
+                self.tohighspeed += 1
 
             ##idling
             #print 'rmp app_r', self.dsitems[i].rpm, self.dsitems[i].vss
             if self.dsitems[i].rpm != 0 and self.dsitems[i].vss == 0:
-                print self.dsitems[i].rpm, self.dsitems[i].app_r
+                #print self.dsitems[i].rpm, self.dsitems[i].app_r
                 self.toidling += 1
 
             ##energy consumption
@@ -118,16 +135,19 @@ class Statistic:
         #print l
         print 'speedsum', speedsum
 
+        self.setscore()
+
         self.averagespeed = speedsum / l ;
         self.oilconsumption = consumptionsum / l ;
         print '急刹车次数', self.tobrakes
         print '急踩油门次数', self.tostepongas
-        print '高速巡航时间', self.tohighspeed / l, '%'
+        print '高速巡航时间', self.tohighspeed / l * 100, '%'
         print '怠速时间', self.toidling / l * 100, '%'
-        print '行驶里程', '总里程', self.mildistance + self.clrdistance, 'Km'\
-                          '故障', self.mildistance, '  ','正常', self.clrdistance
+        print '行驶里程', '总里程', self.mildistance + self.clrdistance, 'Km', '  '\
+                          '故障', self.mildistance, '正常', self.clrdistance
         print '平均速度', self.averagespeed, 'Km/h'
         print '平均油耗', self.oilconsumption, 'L/ 100km'
+        print '驾驶评分', self.drivingscore
         print ''
         #print '行驶里程', self
         ## statistic with dsitems

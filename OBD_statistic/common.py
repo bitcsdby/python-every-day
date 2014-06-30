@@ -16,13 +16,15 @@ class Rawdatastructure:
         self.dataclean(dataitem)
 
     def printvalues(self):
-        print 'MIL_DIST', self.mil_dist
-        print 'CLR_DIST', self.clr_dist
-        print 'VSS', self.vss
-        print 'MAF', self.maf
-        print 'LOAD_PCT', self.load_pct
-        print 'RPM', self.rpm
-        print 'APP_R', self.app_r
+        print self.mil_dist, self.clr_dist, self.vss, self.maf, self.load_pct, self.rpm, self.app_r
+
+        #print 'MIL_DIST', self.mil_dist
+        #print 'CLR_DIST', self.clr_dist
+        #print 'VSS', self.vss
+        #print 'MAF', self.maf
+        #print 'LOAD_PCT', self.load_pct
+        #print 'RPM', self.rpm
+        #print 'APP_R', self.app_r
 
     """
     dataclean
