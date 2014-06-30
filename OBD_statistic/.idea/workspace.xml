@@ -39,8 +39,8 @@
       <file leaf-file-name="statistic.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/statistic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.3127413" vertical-offset="624" max-vertical-offset="4446">
-              <caret line="90" column="19" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.4015444" vertical-offset="3666" max-vertical-offset="4524">
+              <caret line="149" column="126" selection-start-line="149" selection-start-column="126" selection-end-line="149" selection-end-column="126" />
               <folding>
                 <element signature="e#49#84#0" expanded="true" />
               </folding>
@@ -58,8 +58,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/statistic.py" />
         <option value="$PROJECT_DIR$/common.py" />
+        <option value="$PROJECT_DIR$/statistic.py" />
       </list>
     </option>
   </component>
@@ -358,8 +358,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/statistic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.3127413" vertical-offset="624" max-vertical-offset="4446">
-          <caret line="90" column="19" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.4015444" vertical-offset="3666" max-vertical-offset="4524">
+          <caret line="149" column="126" selection-start-line="149" selection-start-column="126" selection-end-line="149" selection-end-column="126" />
           <folding>
             <element signature="e#49#84#0" expanded="true" />
           </folding>
