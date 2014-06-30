@@ -11,14 +11,15 @@ class Statistic:
     def __init__(self):
         self.dbitems = []
         self.dsitems = []
-        self.tobrakes = 0 ## time of brakes
-        self.tostepongas = 0 ## time of step on the gas
-        self.tohighspeed = 0. ## time of high speed working time
-        self.toidling = 0. ## time of idling
+        self.tobrakes = 0  ## time of brakes
+        self.tostepongas = 0  ## time of step on the gas
+        self.tohighspeed = 0.  ## time of high speed working time
+        self.toidling = 0.  ## time of idling
         self.mildistance = 0. ## total Malfunction Indicator Light trip distance
         self.clrdistance = 0. ## total Malfunction Indicator Clear trip distance
-        self.oilconsumption = 0. ## total energy consumption
-        self.drivingscore = 0. ## driving score 
+        self.oilconsumption = 0.  ## total energy consumption
+        self.drivingscore = 0.  ## driving score
+        self.averagespeed = 0.  ##  total 24 hour averge speed
 
     def getdatafromweb(self, start, count, url, dspath, dbpath):
         ## get data from a web sql. items from id start to id end
@@ -67,15 +68,14 @@ class Statistic:
 
     def runstatistic(self):
         l = len(self.dsitems)
+        maxspeed = 0.0      ## for maxspeed
+        speedsum = 0.0      ## for average speed
 
         for i in range(l-1):
             #self.dsitems[i].printvalues()
             # print self.dsitems[i].vss
             #print type(self.dsitems[i].load_pct)
             #print 'MAF', self.dsitems[i].maf
-            maxspeed = 0.0
-            averagespped = 0.0
-
 
             ## load_pct
             if self.dsitems[i].load_pct > 40 and self.dsitems[i].vss > self.dsitems[i+1].vss:
@@ -91,13 +91,15 @@ class Statistic:
                 self.tostepongas += 1
 
             ## speed
+            speedsum += self.dsitems[i].vss
             if self.dsitems[i].vss > maxspeed:
                 maxspeed = self.dsitems[i].vss
             if self.dsitems[i].vss > 70:
                 print 'vss', self.dsitems[i].vss
 
             ##idling
-            if self.dsitems[i].rpm == 0 and self.dsitems[i].app_r != 0:
+            print 'rmp app_r', self.dsitems[i].rpm, self.dsitems[i].vss
+            if self.dsitems[i].rpm != 0 and self.dsitems[i].vss == 0:
                 print self.dsitems[i].rpm, self.dsitems[i].app_r
                 self.toidling += 1
 
@@ -105,18 +107,22 @@ class Statistic:
             #print 'MAF', self.dsitems[i].maf
 
             # DIST
-            if self.dsitems[i].mil_dist > maxmil_dist:
+            if self.dsitems[i].mil_dist > self.mildistance:
                 self.mildistance = self.dsitems[i].mil_dist
-            if self.dsitems[i].clr_dist > maxclr_dist:
+            if self.dsitems[i].clr_dist > self.clrdistance:
                 self.clrdistance = self.dsitems[i].clr_dist
             #print 'MIL_DIST cLRDIST', self.dsitems[i].mil_dist, self.dsitems[i].clr_dist
+        #print l
+        print 'speedsum', speedsum
 
+        self.averagespeed = speedsum / l ;
         print '急刹车次数', self.tobrakes
         print '急踩油门次数', self.tostepongas
         print '高速巡航时间', self.tohighspeed * 7
-        print '怠速时间', self.toidling * 7
+        print '怠速时间', self.toidling / l * 100, '%'
         print '行驶里程', '总里程', self.mildistance + self.clrdistance, \
                           '故障', self.mildistance, '正常', self.clrdistance
+        print '平均速度', self.averagespeed
         print ''
         #print '行驶里程', self
         ## statistic with dsitems
