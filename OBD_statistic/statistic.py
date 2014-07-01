@@ -39,9 +39,10 @@ class Statistic:
             if int(item['VSS']) != 0x88:
                 dsitem = Rawdatastructure(item)
                 self.dsitems.append(dsitem)
+
             #else:
                #print 'invalid dbitem'
-        self.dsitems.sort(lambda x: x['obds12_id']);
+        self.dsitems.sort(key=lambda x: x.obdid);
 
         with open(dspath, 'wb') as latesdstdata:
             pickle.dump(self.dsitems, latesdstdata)
@@ -64,6 +65,12 @@ class Statistic:
             self.dbitems = pickle.load(dbfile)
 
         self.dsitems.sort(key=lambda x: x.obdid);
+        self.dbitems.sort(key=lambda x: x['obds12_id'])
+
+        #for x in self.dbitems:
+        #    print '%8s'%(x['obds12_id']), '%8s'%x['MIL_DIST'], \
+        #          '%8s'%x['CLR_DIST'],'%8s'%x['VSS'],'%8s'%x['MAF'], \
+        #          '%8s'%x['LOAD_PCT'],'%8s'%x['RPM'],'%8s'%x['APP_R']
 
 
 
@@ -93,7 +100,7 @@ class Statistic:
         id_load_pct = 0;
 
         for i in range(l-1):
-            #self.dsitems[i].printvalues()
+            self.dsitems[i].printvalues()
             # print self.dsitems[i].vss
             #print type(self.dsitems[i].load_pct)
             #print 'MAF', self.dsitems[i].maf
@@ -104,14 +111,14 @@ class Statistic:
                 #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
                 #print ''
 
-                self.dsitems[i].printvalues()
-                self.dsitems[i+1].printvalues()
-                print ''
+                #self.dsitems[i].printvalues()
+                #self.dsitems[i+1].printvalues()
+                #print ''
 
                 if id_load_pct != self.dsitems[i].obdid - 1:
                     self.tostepongas += 1
-                else:
-                    print 'remove it stepongas'
+                #else:
+                    #print 'remove it stepongas'
                 id_load_pct = self.dsitems[i].obdid
 
             if self.dsitems[i].load_pct < 10 and self.dsitems[i].vss > self.dsitems[i+1].vss + 15:  ## 15 is a threshold
@@ -125,8 +132,8 @@ class Statistic:
 
                 if id_load_pct != self.dsitems[i].obdid - 1:
                     self.tobrakes += 1
-                else:
-                    print 'remove it brakes'
+                #else:
+                    #print 'remove it brakes'
                 id_load_pct = self.dsitems[i].obdid
 
 

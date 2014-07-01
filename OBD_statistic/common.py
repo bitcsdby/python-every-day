@@ -17,7 +17,7 @@ class Rawdatastructure:
         self.dataclean(dataitem)
 
     def printvalues(self):
-        print self.obdid, self.mil_dist, self.clr_dist, self.vss, self.maf, self.load_pct, self.rpm, self.app_r
+        print '%8d'%self.obdid, '%8.1f'%self.mil_dist, '%8.1f'%self.clr_dist, '%8.1f'%self.vss, '%8.1f'%self.maf, '%8.2f'%self.load_pct, '%8d'%self.rpm, '%8.2f'%self.app_r
 
         #print 'MIL_DIST', self.mil_dist
         #print 'CLR_DIST', self.clr_dist
