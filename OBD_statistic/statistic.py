@@ -24,7 +24,7 @@ class Statistic:
     def getdatafromweb(self, start, count, url, dspath, dbpath):
         ## get data from a web sql. items from id start to id end
         url += 'from=' + str(start) + '&' + 'count=' + str(count)
-        print url
+        #print url
         # from=113230&count=210
 
         request = urllib2.Request(url)
@@ -33,7 +33,7 @@ class Statistic:
 
         self.dbitems.reverse()
 
-        print len(self.dbitems)
+        #print len(self.dbitems)
         for item in self.dbitems:
             #print int(item['VSS'])
             if int(item['VSS']) != 0x88:
@@ -41,7 +41,7 @@ class Statistic:
                 self.dsitems.append(dsitem)
             #else:
                #print 'invalid dbitem'
-        print len(self.dsitems)
+        self.dsitems.sort(lambda x: x['obds12_id']);
 
         with open(dspath, 'wb') as latesdstdata:
             pickle.dump(self.dsitems, latesdstdata)
@@ -49,7 +49,6 @@ class Statistic:
         with open(dbpath, 'wb') as latestdbdata:
             pickle.dump(self.dbitems, latestdbdata)
 
-        print len(self.dsitems), len(self.dbitems)
         #print len(self.dsitems)
 
 
@@ -64,7 +63,10 @@ class Statistic:
         with open(dbpath, 'rb') as dbfile:
             self.dbitems = pickle.load(dbfile)
 
-        print len(self.dsitems), len(self.dbitems)
+        self.dsitems.sort(key=lambda x: x.obdid);
+
+
+
 
     def setscore(self):
         A = 100 - self.tostepongas * 7.5
@@ -87,11 +89,11 @@ class Statistic:
         maxspeed = 0.0      ## for maxspeed
         speedsum = 0.0      ## for average speed
         consumptionsum = 0.0        ## for averge oil consumption
-        minclr = 65535
-        minmil = 65535
+
+        id_load_pct = 0;
 
         for i in range(l-1):
-            self.dsitems[i].printvalues()
+            #self.dsitems[i].printvalues()
             # print self.dsitems[i].vss
             #print type(self.dsitems[i].load_pct)
             #print 'MAF', self.dsitems[i].maf
@@ -101,13 +103,32 @@ class Statistic:
                 #print 'load_pct', self.dsitems[i].load_pct
                 #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
                 #print ''
-                self.tostepongas += 1
+
+                self.dsitems[i].printvalues()
+                self.dsitems[i+1].printvalues()
+                print ''
+
+                if id_load_pct != self.dsitems[i].obdid - 1:
+                    self.tostepongas += 1
+                else:
+                    print 'remove it stepongas'
+                id_load_pct = self.dsitems[i].obdid
 
             if self.dsitems[i].load_pct < 10 and self.dsitems[i].vss > self.dsitems[i+1].vss + 15:  ## 15 is a threshold
                 #print 'load_pct', self.dsitems[i].load_pct , self.dsitems[i].vss, self.dsitems[i+1].vss
                 #print 'vss', self.dsitems[i].vss, self.dsitems[i+1].vss
                 #print ''
-                self.tobrakes += 1
+
+                #self.dsitems[i].printvalues()
+                #self.dsitems[i+1].printvalues()
+                #print ''
+
+                if id_load_pct != self.dsitems[i].obdid - 1:
+                    self.tobrakes += 1
+                else:
+                    print 'remove it brakes'
+                id_load_pct = self.dsitems[i].obdid
+
 
             ## speed
             speedsum += self.dsitems[i].vss
@@ -135,12 +156,16 @@ class Statistic:
                 self.clrdistance = self.dsitems[i].clr_dist
             #print 'MIL_DIST cLRDIST', self.dsitems[i].mil_dist, self.dsitems[i].clr_dist
         #print l
-        print 'speedsum', speedsum
+        #print 'speedsum', speedsum
 
         self.setscore()
 
-        self.averagespeed = speedsum / l ;
-        self.oilconsumption = consumptionsum / l ;
+        if l != 0:
+            self.averagespeed = speedsum / l ;
+            self.oilconsumption = consumptionsum / l ;
+
+        print self.clrdistance,self.dsitems[0].clr_dist
+
         print '急刹车次数', self.tobrakes
         print '急踩油门次数', self.tostepongas
         print '高速巡航时间', self.tohighspeed / l * 100, '%'
@@ -163,7 +188,7 @@ if __name__ == '__main__':
     dsfilepath = 'latest_dsdata.pickle'
     dbfilepath = 'latest_dbdata.pickle'
 
-    #s.getdatafromweb(2400, 301, url, dsfilepath, dbfilepath)
+    #s.getdatafromweb(380, 251, url, dsfilepath, dbfilepath)
     s.getdatafromlocal(dsfilepath, dbfilepath)
 
     s.runstatistic()

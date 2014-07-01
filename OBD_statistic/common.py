@@ -5,6 +5,7 @@ __author__ = 'bitcsdby'
 class Rawdatastructure:
     def __init__(self, dataitem):
         ##define useful data domain here
+        self.obdid = 0L  #  item id in database
         self.mil_dist = 0.00  # distance after malfunction indicator light on
         self.clr_dist = 0.00  # distance after diagnostic codes cleared
         self.initial_mil = 0.00  # total mil = initial_mil + mildist + clrdist
@@ -16,7 +17,7 @@ class Rawdatastructure:
         self.dataclean(dataitem)
 
     def printvalues(self):
-        print self.mil_dist, self.clr_dist, self.vss, self.maf, self.load_pct, self.rpm, self.app_r
+        print self.obdid, self.mil_dist, self.clr_dist, self.vss, self.maf, self.load_pct, self.rpm, self.app_r
 
         #print 'MIL_DIST', self.mil_dist
         #print 'CLR_DIST', self.clr_dist
@@ -31,6 +32,13 @@ class Rawdatastructure:
     dbitem : a dictionary
     """
     def dataclean(self, dataitem):
+        # obdid
+        if dataitem['obds12_id'].isdigit():
+            self.obdid = long(dataitem['obds12_id'])
+        else:
+            print 'invalid MIL_DIST value', dataitem['obds12_id']
+            return
+
         # MIL_DIST km
 
         if dataitem['MIL_DIST'].isdigit():
