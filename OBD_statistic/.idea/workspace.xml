@@ -25,7 +25,7 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="common.py" pinned="false" current="false" current-in-tab="true">
+            <file leaf-file-name="common.py" pinned="false" current="true" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/common.py">
                 <provider selected="true" editor-type-id="text-editor">
                   <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="2314">
@@ -46,7 +46,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="statistic.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="statistic.py" pinned="false" current="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/statistic.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.93541205" vertical-offset="2440" max-vertical-offset="5356">
@@ -398,14 +398,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="2314">
-          <caret line="19" column="158" selection-start-line="19" selection-start-column="158" selection-end-line="19" selection-end-column="158" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/statistic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.93541205" vertical-offset="2440" max-vertical-offset="5356">
@@ -413,6 +405,14 @@
           <folding>
             <element signature="e#49#84#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="2314">
+          <caret line="19" column="158" selection-start-line="19" selection-start-column="158" selection-end-line="19" selection-end-column="158" />
+          <folding />
         </state>
       </provider>
     </entry>
