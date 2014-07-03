@@ -90,7 +90,9 @@ class Statistic:
         #print A,B,C,D
         self.drivingscore = (A + B + C + D ) / 4
 
-
+## 没有判定时间段，可以根据时间段，考虑不同段落的计算
+## 考虑出现三分钟以上的非法数据  就认为是两段路程
+## 两段路程的考虑
     def runstatistic(self):
         l = len(self.dsitems)
         maxspeed = 0.0      ## for maxspeed
