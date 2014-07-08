@@ -96,6 +96,10 @@ class Underwaternode:
 
         invH = np.linalg.inv(H)
 
+        for x in invH:
+            print x
+            print ''
+
         rlt = np.dot(invH, deltarou)
 
         #print 'rlt', rlt
