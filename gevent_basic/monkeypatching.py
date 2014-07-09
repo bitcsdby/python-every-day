@@ -1,0 +1,22 @@
+import socket
+print (socket.socket)
+
+print("After monkey patch")
+from gevent import monkey
+monkey.patch_socket()
+
+print(socket.socket)
+
+
+import select
+print(select.select)
+monkey.patch_select()
+print("After monkey patch")
+print(select.select)
+
+
+import ssl
+print(ssl)
+print("After monkey patch")
+monkey.patch_ssl();
+print(ssl)
