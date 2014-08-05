@@ -16,3 +16,5 @@ class CoorTimePair:
         """coor and receive time in pair"""
         self.localreceivetime_to_ = float(to_)
         self.S = S
+
+print "this is a string from common.h"
